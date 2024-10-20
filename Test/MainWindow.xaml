@@ -17,6 +17,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Button x:Name="button" Content="任务下发" Width="150" Height="80" Click="button_Click"/>
+        <Button Grid.Row="1" x:Name="button1" Content="socket下发" Width="150" Height="80" Click="button1_Click"/>
         <WrapPanel Grid.Column="1">
             <TextBlock Text="机器ID：" FontSize="20"/>
             <TextBox x:Name="JQ"  Width="150" Height="30"/>

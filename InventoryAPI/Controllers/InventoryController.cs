@@ -19,11 +19,10 @@ namespace InventoryAPI.Controllers
         [HttpPost]
         public TaskOut Inventory(TaskIn taskIn)
         {
-            TaskOut taskOut = new TaskOut()
-            {
-                queryRobotId=taskIn.robotId,
-                taskId=taskIn.taskId,
-            };
+            TaskOut taskOut = new TaskOut();
+            Task.Run(() => {
+                Task.Delay(10000);
+            });
             try
             {
                 var ids = tcpService.GetIds();

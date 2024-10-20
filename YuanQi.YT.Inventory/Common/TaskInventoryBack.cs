@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace YuanQi.YT.Inventory
+﻿namespace YuanQi.YT.Inventory
 {
     public class TaskInventoryBack
     {

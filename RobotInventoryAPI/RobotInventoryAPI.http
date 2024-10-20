@@ -1,0 +1,6 @@
+@RobotInventoryAPI_HostAddress = http://localhost:5016
+
+GET {{RobotInventoryAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

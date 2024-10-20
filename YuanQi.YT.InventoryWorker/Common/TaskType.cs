@@ -1,4 +1,4 @@
-﻿namespace YuanQi.YT.Inventory
+﻿namespace YuanQi.YT.InventoryWorker
 {
     public class TaskType
     {

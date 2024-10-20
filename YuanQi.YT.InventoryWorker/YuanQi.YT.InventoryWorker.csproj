@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-YuanQi.YT.InventoryWorker-4aaca500-0f38-4266-a048-8f5164ac3e76</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FreeSql" Version="3.2.833" />
+    <PackageReference Include="FreeSql.Provider.Sqlite" Version="3.2.833" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="8.0.0" />
+    <PackageReference Include="TouchSocket.Hosting" Version="2.0.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="GReaderApi">
+      <HintPath>Lib\GReaderApi.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
