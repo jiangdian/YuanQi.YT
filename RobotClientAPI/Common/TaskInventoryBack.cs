@@ -16,7 +16,7 @@
     /// <summary>
     /// 视觉盘点结果
     /// </summary>
-    public bool? visionResult { get; set; }
+    public List<Vision>? visionResult { get; set; }
     /// <summary>
     /// Rfid盘点结果
     /// </summary>
