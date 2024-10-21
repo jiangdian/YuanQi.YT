@@ -17,20 +17,33 @@ public class InventoryController : ControllerBase
         TaskOut taskOut = new TaskOut();
         try
         {
-            switch (taskIn.robotId)
+            switch (taskIn.taskType)
             {
-                case RobotType.robotOne:
-                    PostDataToApi(taskIn, UrlType.UrlOne);
+                case TaskType.scan:
                     break;
-                case RobotType.robotTwo:
-                    PostDataToApi(taskIn, UrlType.UrlTwo);
+                case TaskType.record:
                     break;
-                case RobotType.robotThree:
-                    PostDataToApi(taskIn, UrlType.UrlThree);
+                case TaskType.rfid:
+                case TaskType.stop:
+                case TaskType.vision:
+                    switch (taskIn.robotId)
+                    {
+                        case RobotType.robotOne:
+                            PostDataToApi(taskIn, UrlType.UrlOne);
+                            break;
+                        case RobotType.robotTwo:
+                            PostDataToApi(taskIn, UrlType.UrlTwo);
+                            break;
+                        case RobotType.robotThree:
+                            PostDataToApi(taskIn, UrlType.UrlThree);
+                            break;
+                        default:
+                            break;
+                    }
                     break;
                 default:
                     break;
-            }
+            }           
             taskOut.status = 200;
             taskOut.msg = "任务发送成功";
             _logger.LogInformation($"任务ID{taskIn.taskId}下发成功!");

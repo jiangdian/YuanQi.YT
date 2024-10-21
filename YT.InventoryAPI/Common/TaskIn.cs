@@ -8,6 +8,11 @@
     /// 任务id
     /// </summary>
     public long taskId { get; set; }
+    public string? leftStorageCode { get; set; }
+    public string? leftTrayCode { get; set; }
+
+    public string? rightStorageCode { get; set; }
+    public string? rightTrayCode { get; set; }
     /// <summary>
     /// 任务类型：rfid视-射频盘点 vision-觉盘点  stop-结束盘点  scan-入库口组盘信息
     /// </summary>
