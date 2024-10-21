@@ -35,7 +35,10 @@ namespace YuanQi.YT.Inventory
                     case TaskType.vision:
                         InitTaskInventoryBack(taskin);
                         //todo:视觉盘点
+
                         InitTaskInventoryVisionBack(true);//盘点结果填入
+                        break;
+                    case TaskType.scan:
                         break;
                     case TaskType.stop:
                         _serverClass.CloseRfid();
