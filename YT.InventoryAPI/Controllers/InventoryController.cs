@@ -20,8 +20,8 @@ public class InventoryController : ControllerBase
             switch (taskIn.taskType)
             {
                 case TaskType.scan:
-                    break;
                 case TaskType.record:
+                    PostDataToApi(taskIn, UrlType.UrlFour);
                     break;
                 case TaskType.rfid:
                 case TaskType.stop:
