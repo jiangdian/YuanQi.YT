@@ -5,10 +5,6 @@
     /// </summary>
     public string storageArea { get; set; }
     /// <summary>
-    /// 托盘码
-    /// </summary>
-    public string? trayNo { get; set; }
-    /// <summary>
     /// 物料集合
     /// </summary>
     public List<string>? materialNoList { get; set; }
