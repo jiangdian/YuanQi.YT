@@ -7,7 +7,7 @@ using System.Text;
 public class InventoryController : ControllerBase
 {
     ILogger<InventoryController> _logger;
-    static TaskInventoryBack _taskInventoryBack=new TaskInventoryBack();
+    static TaskInventoryBack _taskInventoryBack = new TaskInventoryBack();
     public InventoryController(ILogger<InventoryController> logger)
     {
         _logger = logger;
@@ -18,7 +18,8 @@ public class InventoryController : ControllerBase
         TaskOut taskOut = new TaskOut();
         try
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 switch (taskIn.taskType)
                 {
                     case TaskType.rfid:
@@ -34,7 +35,7 @@ public class InventoryController : ControllerBase
                     case TaskType.record:
                         VisionClass.Instance.GrabImage();
                         break;
-                    case TaskType.stop:                        
+                    case TaskType.stop:
                         InitTaskInventoryRfidBack(RfidClass.Instance.CloseRfid());
                         break;
                     default:
@@ -109,4 +110,4 @@ public class InventoryController : ControllerBase
             }
         }
     }
-    }
+}

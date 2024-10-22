@@ -13,20 +13,21 @@ namespace InventoryAPI.Controllers
         ILogger<InventoryController> _logger;
         public InventoryController(ITcpService tcpService, ILogger<InventoryController> logger)
         {
-            this.tcpService=tcpService;
+            this.tcpService = tcpService;
             _logger = logger;
         }
         [HttpPost]
         public TaskOut Inventory(TaskIn taskIn)
         {
             TaskOut taskOut = new TaskOut();
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 Task.Delay(10000);
             });
             try
             {
                 var ids = tcpService.GetIds();
-                if (ids.Count()==0)
+                if (ids.Count() == 0)
                 {
                     throw new Exception();
                 }

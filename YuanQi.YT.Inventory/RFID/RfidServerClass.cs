@@ -5,7 +5,7 @@ namespace YuanQi.YT.Inventory
 {
     public class RfidServerClass
     {
-        GClient gClient=new GClient();
+        GClient gClient = new GClient();
         public HashSet<string> recevid = new HashSet<string>();
         public RfidServerClass()
         {
@@ -16,7 +16,7 @@ namespace YuanQi.YT.Inventory
 
         private void OnGClientConnected(GClient client)
         {
-            if (gClient!=client)
+            if (gClient != client)
             {
                 gClient = client;
                 client.OnTcpDisconnected += new delegateTcpDisconnected(OnTcpDisconnected);

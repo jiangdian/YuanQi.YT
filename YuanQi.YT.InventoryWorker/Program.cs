@@ -24,7 +24,7 @@ namespace YuanQi.YT.InventoryWorker
                     a.Add<InventoryPlugin>();
                 });
             });
-            Func<IServiceProvider, IFreeSql> fsqlFactory = r=>
+            Func<IServiceProvider, IFreeSql> fsqlFactory = r =>
             {
                 var logger = LoggerFactory.Create(builder => builder.AddConsole().AddDebug()).CreateLogger<Program>();
                 IFreeSql fsql = new FreeSql.FreeSqlBuilder()

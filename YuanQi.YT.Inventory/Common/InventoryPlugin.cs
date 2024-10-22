@@ -14,7 +14,7 @@ namespace YuanQi.YT.Inventory
         RfidServerClass _serverClass;
         TaskInventoryBack _taskInventoryBack;
 
-        public InventoryPlugin(ILogger<InventoryPlugin> logger,IConfiguration configuration, RfidServerClass serverClass)
+        public InventoryPlugin(ILogger<InventoryPlugin> logger, IConfiguration configuration, RfidServerClass serverClass)
         {
             _logger = logger;
             robotId = Convert.ToInt64(configuration["robotId"]);
@@ -22,10 +22,10 @@ namespace YuanQi.YT.Inventory
         }
         public Task OnTcpReceived(TcpClient client, ReceivedDataEventArgs e)
         {
-            var taskin= JsonConvert.DeserializeObject<TaskIn>(e.ByteBlock.ToString());
-            if (taskin?.robotId == robotId) 
+            var taskin = JsonConvert.DeserializeObject<TaskIn>(e.ByteBlock.ToString());
+            if (taskin?.robotId == robotId)
             {
-                
+
                 switch (taskin.taskType)
                 {
                     case TaskType.rfid:
@@ -62,7 +62,7 @@ namespace YuanQi.YT.Inventory
                 taskId = taskIn.taskId,
                 startTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss")
             };
-            _logger.LogInformation("开始{0}盘点任务，任务ID{1}", taskIn.taskType,taskIn.taskId);
+            _logger.LogInformation("开始{0}盘点任务，任务ID{1}", taskIn.taskType, taskIn.taskId);
         }
         /// <summary>
         /// rfid盘点结束，记录盘点结果
@@ -72,7 +72,7 @@ namespace YuanQi.YT.Inventory
             _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
             _taskInventoryBack.rfidResult = _serverClass.recevid.ToList();
             _logger.LogInformation("结束rfid盘点任务，任务ID{0}", _taskInventoryBack.taskId);
-           await PostDataToApi(_taskInventoryBack);
+            await PostDataToApi(_taskInventoryBack);
         }
         /// <summary>
         /// 视觉盘点结束，记录盘点结果

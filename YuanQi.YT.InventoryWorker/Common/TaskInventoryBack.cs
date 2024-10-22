@@ -32,6 +32,5 @@
         /// 任务结束时间
         /// </summary>
         public string endTime { get; set; }
-
     }
 }

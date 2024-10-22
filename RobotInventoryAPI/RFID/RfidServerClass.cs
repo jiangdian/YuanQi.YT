@@ -77,5 +77,4 @@ public class RfidServerClass : IHostedService
         gClient.Close();
         return Task.CompletedTask;
     }
-
 }

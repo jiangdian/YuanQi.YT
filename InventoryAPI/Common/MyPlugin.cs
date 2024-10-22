@@ -3,7 +3,7 @@ using TouchSocket.Sockets;
 
 namespace InventoryAPI.Common
 {
-    class MyPlugin : PluginBase, ITcpReceivedPlugin,ITcpConnectedPlugin
+    class MyPlugin : PluginBase, ITcpReceivedPlugin, ITcpConnectedPlugin
     {
         ILogger<MyPlugin> _logger;
         public MyPlugin(ILogger<MyPlugin> logger)
@@ -18,7 +18,7 @@ namespace InventoryAPI.Common
 
         public Task OnTcpConnected(ITcpClientBase client, ConnectedEventArgs e)
         {
-            _logger.LogInformation(client.IP+"连接");
+            _logger.LogInformation(client.IP + "连接");
             return Task.CompletedTask;
         }
     }

@@ -8,5 +8,4 @@
         public List<string> trayCode { get; set; }
         public List<string> assetCode { get; set; }
     }
-
 }

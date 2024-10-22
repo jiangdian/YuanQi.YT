@@ -11,7 +11,7 @@ namespace RobotInventoryAPI
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<RfidServerClass>();
             builder.Services.AddHostedService<RfidServerClass>();
-            
+
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             //if (app.Environment.IsDevelopment())

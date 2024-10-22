@@ -24,12 +24,14 @@ namespace Test
         public MainWindow()
         {
             InitializeComponent();
-            
+
             service.Connecting = (client, e) => { return EasyTask.CompletedTask; };//有客户端正在连接
             service.Connected = (client, e) => { return EasyTask.CompletedTask; };//有客户端成功连接
             service.Disconnecting = (client, e) => { return EasyTask.CompletedTask; };//有客户端正在断开连接，只有当主动断开时才有效。
-            service.Disconnected = (client, e) => { 
-                return EasyTask.CompletedTask; };//有客户端断开连接
+            service.Disconnected = (client, e) =>
+            {
+                return EasyTask.CompletedTask;
+            };//有客户端断开连接
             service.Received = (client, e) =>
             {
                 //从客户端收到信息
@@ -98,7 +100,7 @@ namespace Test
                     HttpResponseMessage response = await client.PostAsync(apiUrl, content);
                     if (response.IsSuccessStatusCode)
                     {
-                        var ss= await response.Content.ReadAsStringAsync();
+                        var ss = await response.Content.ReadAsStringAsync();
                         return ss;
                     }
                     else

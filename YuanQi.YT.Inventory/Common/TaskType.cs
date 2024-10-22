@@ -7,6 +7,5 @@
         public const string stop = "stop";
         public const string scan = "scan";
         public const string record = "record";
-
     }
 }
