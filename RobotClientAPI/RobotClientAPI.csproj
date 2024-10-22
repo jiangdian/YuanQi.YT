@@ -16,6 +16,9 @@
     <Reference Include="GReaderApi">
       <HintPath>Lib\GReaderApi.dll</HintPath>
     </Reference>
+    <Reference Include="halcondotnet">
+      <HintPath>C:\Program Files\MVTec\HALCON-18.11-Steady\bin\dotnet20\halcondotnet.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

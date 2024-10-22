@@ -8,6 +8,7 @@ public class InventoryController : ControllerBase
 {
     ILogger<InventoryController> _logger;
     RfidServerClass _serverClass;
+
     static TaskInventoryBack _taskInventoryBack=new TaskInventoryBack();
     public InventoryController(ILogger<InventoryController> logger, RfidServerClass serverClass)
     {

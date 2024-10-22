@@ -26,10 +26,13 @@ public class InventoryController : ControllerBase
                         InitTaskInventoryBack(taskIn);
                         RfidClass.Instance.ReadRfid();
                         break;
-                    case TaskType.vision:
+                    case TaskType.scan:
                         InitTaskInventoryBack(taskIn);
                         //todo:视觉盘点
                         //InitTaskInventoryVisionBack(true);//盘点结果填入
+                        break;
+                    case TaskType.record:
+                        VisionClass.Instance.GrabImage();
                         break;
                     case TaskType.stop:                        
                         InitTaskInventoryRfidBack(RfidClass.Instance.CloseRfid());

@@ -32,7 +32,7 @@ public class RfidClass
     {
         if (clientConn.OpenTcp("192.168.0.30:8160", 3000, out status))
         {
-            if (status==eConnectionAttemptEventStatusType.OK)
+            if (status == eConnectionAttemptEventStatusType.OK)
             {
                 clientConn.OnEncapedTagEpcLog += new delegateEncapedTagEpcLog(OnEncapedTagEpcLog);
                 clientConn.OnEncapedTagEpcOver += new delegateEncapedTagEpcOver(OnEncapedTagEpcOver);
