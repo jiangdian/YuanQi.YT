@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RobotClientAPI.Common;
 using System.Text;
 
 [ApiController]
@@ -8,6 +9,9 @@ public class InventoryController : ControllerBase
 {
     ILogger<InventoryController> _logger;
     static TaskInventoryBack _taskInventoryBack = new TaskInventoryBack();
+    static FrontShutterTaskBack _frontShutterTaskBack = new FrontShutterTaskBack();
+    static BehindShutterTaskBack _behindShutterTaskBack = new BehindShutterTaskBack();
+
     public InventoryController(ILogger<InventoryController> logger)
     {
         _logger = logger;
@@ -30,14 +34,15 @@ public class InventoryController : ControllerBase
                     case TaskType.vision://视觉盘点
                         InitTaskInventoryBack(taskIn);
                         //todo:视觉盘点
-                        //InitTaskInventoryVisionBack(true);//盘点结果填入
+                        InitTaskInventoryVisionBack(new List<Vision>());//盘点结果填入
                         break;
                     case TaskType.scan://视觉盘
-
+                        InitFrontTaskVisionBack(new List<string>());
                         break;
                     case TaskType.record:
                         VisionClass.Instance.GrabImage();
                         //todo:调用视觉拍照反馈
+                        InitBehindTaskVisionBack(true);
                         break;
                     case TaskType.stop:
                         InitTaskInventoryRfidBack(RfidClass.Instance.CloseRfid());
@@ -83,12 +88,98 @@ public class InventoryController : ControllerBase
         _logger.LogInformation("结束rfid盘点任务，任务ID{0}", _taskInventoryBack.taskId);
         await PostDataToApi(_taskInventoryBack);
     }
+
+    private async void InitTaskInventoryVisionBack(List<Vision> result)
+    {
+        _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
+        _taskInventoryBack.visionResult = result;
+        _logger.LogInformation("结束视觉盘点任务，任务ID{0}", _taskInventoryBack.taskId);
+        await PostDataToApi(_taskInventoryBack);
+    }
+
+    private async void InitFrontTaskVisionBack(List<string>strings)
+    {
+        _frontShutterTaskBack.scanInfo= strings;
+        _logger.LogInformation("结束视觉扫描任务，任务ID{0}", _frontShutterTaskBack.taskId);
+        await PostDataToApi(_frontShutterTaskBack);
+    }
+
+    private async void InitBehindTaskVisionBack(bool result)
+    {
+        _behindShutterTaskBack.photoSignal = result;
+        _logger.LogInformation("结束视觉扫描任务，任务ID{0}", _behindShutterTaskBack.taskId);
+        await PostDataToApi(_behindShutterTaskBack);
+    }
     /// <summary>
     /// 调用wcs任务反馈接口
     /// </summary>
     /// <param name="taskIn"></param>
     /// <returns></returns>
     private async Task<string> PostDataToApi(TaskInventoryBack taskIn)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                string apiUrl = "http:/192.168.10.150:10086/Inventory/Inventory";//todo:wcs地址
+                var jsonString = JsonConvert.SerializeObject(taskIn);
+                HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new Exception($"Error calling API: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return $"Error: {ex.Message}";
+            }
+        }
+    }
+
+    /// <summary>
+    /// 调用wcs任务反馈接口
+    /// </summary>
+    /// <param name="taskIn"></param>
+    /// <returns></returns>
+    private async Task<string> PostDataToApi(FrontShutterTaskBack taskIn)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                string apiUrl = "http:/192.168.10.150:10086/Inventory/Inventory";//todo:wcs地址
+                var jsonString = JsonConvert.SerializeObject(taskIn);
+                HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    throw new Exception($"Error calling API: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return $"Error: {ex.Message}";
+            }
+        }
+    }
+
+    /// <summary>
+    /// 调用wcs任务反馈接口
+    /// </summary>
+    /// <param name="taskIn"></param>
+    /// <returns></returns>
+    private async Task<string> PostDataToApi(BehindShutterTaskBack taskIn)
     {
         using (HttpClient client = new HttpClient())
         {
