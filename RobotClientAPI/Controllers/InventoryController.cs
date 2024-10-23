@@ -121,7 +121,7 @@ public class InventoryController : ControllerBase
         {
             try
             {
-                string apiUrl = "http:/192.168.10.150:10086/Inventory/Inventory";//todo:wcs地址
+                string apiUrl = "http://192.168.10.150:10076/api/Equip/InventoryFeedback";//todo:wcs地址
                 var jsonString = JsonConvert.SerializeObject(taskIn);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
@@ -153,7 +153,7 @@ public class InventoryController : ControllerBase
         {
             try
             {
-                string apiUrl = "http:/192.168.10.150:10086/Inventory/Inventory";//todo:wcs地址
+                string apiUrl = "http://192.168.10.150:10076/api/Equip/VisionFeedback";//todo:wcs地址
                 var jsonString = JsonConvert.SerializeObject(taskIn);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
