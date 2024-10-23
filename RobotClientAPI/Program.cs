@@ -10,6 +10,7 @@ namespace RobotClientAPI
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Configuration.AddJsonFile("appsettings.json");
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -17,8 +18,8 @@ namespace RobotClientAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            var logger = app.Logger;
-            logger.LogInformation("Application is starting...");
+            //var logger = app.Logger;
+            //logger.LogInformation("Application is starting...");
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();

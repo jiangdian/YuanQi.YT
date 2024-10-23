@@ -11,10 +11,11 @@ public class InventoryController : ControllerBase
     static TaskInventoryBack _taskInventoryBack = new TaskInventoryBack();
     static FrontShutterTaskBack _frontShutterTaskBack = new FrontShutterTaskBack();
     static BehindShutterTaskBack _behindShutterTaskBack = new BehindShutterTaskBack();
-
-    public InventoryController(ILogger<InventoryController> logger)
+    IConfiguration _configuration;
+    public InventoryController(ILogger<InventoryController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
     [HttpPost]
     public TaskOut Inventory(TaskIn taskIn)
@@ -121,7 +122,7 @@ public class InventoryController : ControllerBase
         {
             try
             {
-                string apiUrl = "http://192.168.10.150:10076/api/Equip/InventoryFeedback";//todo:wcs地址
+                string apiUrl = _configuration["InventoryUrl"].ToString();
                 var jsonString = JsonConvert.SerializeObject(taskIn);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
@@ -153,7 +154,7 @@ public class InventoryController : ControllerBase
         {
             try
             {
-                string apiUrl = "http://192.168.10.150:10076/api/Equip/VisionFeedback";//todo:wcs地址
+                string apiUrl = _configuration["ScanUrl"].ToString();
                 var jsonString = JsonConvert.SerializeObject(taskIn);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
@@ -185,7 +186,7 @@ public class InventoryController : ControllerBase
         {
             try
             {
-                string apiUrl = "http:/192.168.10.150:10086/Inventory/Inventory";//todo:wcs地址
+                string apiUrl = _configuration["PhotoUrl"].ToString();
                 var jsonString = JsonConvert.SerializeObject(taskIn);
                 HttpContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
                 HttpResponseMessage response = await client.PostAsync(apiUrl, content);
