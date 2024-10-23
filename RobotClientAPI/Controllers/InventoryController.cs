@@ -86,7 +86,7 @@ public class InventoryController : ControllerBase
     {
         _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
         _taskInventoryBack.rfidResult = strings;
-        _logger.LogInformation("结束rfid盘点任务，任务ID{0}", _taskInventoryBack.taskId);
+        _logger.LogInformation($"结束rfid盘点任务，任务ID{_taskInventoryBack.taskId}");
         await PostDataToApi(_taskInventoryBack);
     }
 
@@ -94,21 +94,21 @@ public class InventoryController : ControllerBase
     {
         _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
         _taskInventoryBack.visionResult = result;
-        _logger.LogInformation("结束视觉盘点任务，任务ID{0}", _taskInventoryBack.taskId);
+        _logger.LogInformation($"结束视觉盘点任务，任务ID{_taskInventoryBack.taskId}");
         await PostDataToApi(_taskInventoryBack);
     }
 
     private async void InitFrontTaskVisionBack(List<string> strings)
     {
         _frontShutterTaskBack.scanInfo = strings;
-        _logger.LogInformation("结束视觉扫描任务，任务ID{0}", _frontShutterTaskBack.taskId);
+        _logger.LogInformation($"结束视觉扫描任务，任务ID{_frontShutterTaskBack.taskId}");
         await PostDataToApi(_frontShutterTaskBack);
     }
 
     private async void InitBehindTaskVisionBack(bool result)
     {
         _behindShutterTaskBack.photoSignal = result;
-        _logger.LogInformation("结束视觉扫描任务，任务ID{0}", _behindShutterTaskBack.taskId);
+        _logger.LogInformation($"结束视觉拍照任务，任务ID{_behindShutterTaskBack.taskId}");
         await PostDataToApi(_behindShutterTaskBack);
     }
     /// <summary>
