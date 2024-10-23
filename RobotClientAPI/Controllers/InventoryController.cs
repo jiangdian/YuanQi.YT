@@ -97,9 +97,9 @@ public class InventoryController : ControllerBase
         await PostDataToApi(_taskInventoryBack);
     }
 
-    private async void InitFrontTaskVisionBack(List<string>strings)
+    private async void InitFrontTaskVisionBack(List<string> strings)
     {
-        _frontShutterTaskBack.scanInfo= strings;
+        _frontShutterTaskBack.scanInfo = strings;
         _logger.LogInformation("结束视觉扫描任务，任务ID{0}", _frontShutterTaskBack.taskId);
         await PostDataToApi(_frontShutterTaskBack);
     }
