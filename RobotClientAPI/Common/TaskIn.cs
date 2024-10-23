@@ -15,7 +15,7 @@
     /// <summary>
     /// 托盘编号 当taskType为scan和record时，当前的托盘编号附在该字段下，且不允许为空
     /// </summary>
-    public string? TrayCode { get; set; }
+    public string? trayCode { get; set; }
     /// <summary>
     /// 右侧货位编号 当taskType为vision时，货位编号不允许为空
     /// </summary>
