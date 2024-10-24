@@ -33,14 +33,17 @@ public class InventoryController : ControllerBase
                         RfidClass.Instance.ReadRfid();
                         break;
                     case TaskType.vision://视觉盘点
+                        _logger.LogInformation("接收到视觉盘点任务");
                         InitTaskInventoryBack(taskIn);
                         //todo:视觉盘点
                         InitTaskInventoryVisionBack(new List<Vision>());//盘点结果填入
                         break;
                     case TaskType.scan://视觉盘
+                        _logger.LogInformation("接收到视觉扫码任务");
                         InitFrontTaskVisionBack(new List<string>());
                         break;
                     case TaskType.record:
+                        _logger.LogInformation("接收到视觉拍照任务");
                         VisionClass.Instance.GrabImage();
                         //todo:调用视觉拍照反馈
                         InitBehindTaskVisionBack(true);
@@ -77,7 +80,7 @@ public class InventoryController : ControllerBase
             taskId = taskIn.taskId,
             startTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss")
         };
-        _logger.LogInformation("开始{0}盘点任务，任务ID{1}", taskIn.taskType, taskIn.taskId);
+        _logger.LogInformation($"开始{taskIn.taskType}盘点任务，任务ID{taskIn.taskId}");
     }
     /// <summary>
     /// rfid盘点结束，记录盘点结果
