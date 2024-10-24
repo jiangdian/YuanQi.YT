@@ -49,6 +49,7 @@ public class InventoryController : ControllerBase
                         InitBehindTaskVisionBack(true);
                         break;
                     case TaskType.stop:
+                        RfidClass.Instance.RfidOpen();
                         InitTaskInventoryRfidBack(RfidClass.Instance.CloseRfid());
                         break;
                     default:
@@ -89,7 +90,7 @@ public class InventoryController : ControllerBase
     {
         _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
         _taskInventoryBack.rfidResult = strings;
-        _logger.LogInformation($"结束rfid盘点任务，任务ID{_taskInventoryBack.taskId}");
+        _logger.LogInformation($"结束rfid盘点任务，任务ID{_taskInventoryBack.taskId},条码信息:{string.Join(",",strings)}");
         await PostDataToApi(_taskInventoryBack);
     }
 
