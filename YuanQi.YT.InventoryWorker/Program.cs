@@ -11,7 +11,7 @@ namespace YuanQi.YT.InventoryWorker
             builder.Logging.AddLog4Net(@"Config\log4net.config");
             builder.Services.AddSingletonTcpClient(config =>
             {
-                config.SetRemoteIPHost("192.168.2.88:7789");
+                config.SetRemoteIPHost("127.0.0.1:7789");
                 config.ConfigureContainer(a =>
                 {
                     a.AddConsoleLogger();
@@ -36,8 +36,9 @@ namespace YuanQi.YT.InventoryWorker
             };
             builder.Services.AddSingleton(fsqlFactory);
             builder.Services.AddSingleton<RfidServerClass>();
-            builder.Configuration.AddJsonFile("appsettings.json");
+            //builder.Configuration.AddJsonFile("appsettings.json");
             builder.Services.AddWindowsService();
+            builder.Services.Configure<MyConfig>(builder.Configuration.GetSection("MyConfig"));
             var app = builder.Build();
             app.Services.GetRequiredService<ITcpClient>().Connect();
             app.Services.GetRequiredService<RfidServerClass>();
