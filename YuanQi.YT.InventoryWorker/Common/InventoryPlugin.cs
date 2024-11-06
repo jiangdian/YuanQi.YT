@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System.Text;
 using TouchSocket.Core;
 using TouchSocket.Sockets;
@@ -12,8 +13,10 @@ namespace YuanQi.YT.InventoryWorker
         RfidServerClass _serverClass;
         TaskInventoryBack _taskInventoryBack;
         public IFreeSql freeSql;
-        public InventoryPlugin(ILogger<InventoryPlugin> logger, IConfiguration configuration, RfidServerClass serverClass, IFreeSql freeSql)
+        public InventoryPlugin(ILogger<InventoryPlugin> logger, IConfiguration configuration, RfidServerClass serverClass, IFreeSql freeSql, IOptionsSnapshot<MyConfig> options)
         {
+            var s1= options.Value.set1;
+            var s2=options.Value.set2;
             _logger = logger;
             robotId = Convert.ToInt64(configuration["robotId"]);
             _serverClass = serverClass;
