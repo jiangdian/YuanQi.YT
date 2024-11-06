@@ -36,17 +36,17 @@ public class InventoryController : ControllerBase
                         _logger.LogInformation("接收到视觉盘点任务");
                         InitTaskInventoryBack(taskIn);
                         //todo:视觉盘点
-                        InitTaskInventoryVisionBack(new List<Vision>());//盘点结果填入
+                        InitTaskInventoryVisionBack(new List<Vision>(),taskIn);//盘点结果填入
                         break;
                     case TaskType.scan://视觉盘
                         _logger.LogInformation("接收到视觉扫码任务");
-                        InitFrontTaskVisionBack(new List<string>());
+                        InitFrontTaskVisionBack(new List<string>(),taskIn);
                         break;
                     case TaskType.record:
                         _logger.LogInformation("接收到视觉拍照任务");
                         VisionClass.Instance.GrabImage();
                         //todo:调用视觉拍照反馈
-                        InitBehindTaskVisionBack(true);
+                        InitBehindTaskVisionBack(true,taskIn);
                         break;
                     case TaskType.stop:
                         RfidClass.Instance.RfidOpen();
@@ -94,24 +94,40 @@ public class InventoryController : ControllerBase
         await PostDataToApi(_taskInventoryBack);
     }
 
-    private async void InitTaskInventoryVisionBack(List<Vision> result)
+    private async void InitTaskInventoryVisionBack(List<Vision> result, TaskIn taskIn)
     {
-        _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
-        _taskInventoryBack.visionResult = result;
+        _taskInventoryBack = new TaskInventoryBack()
+        {
+            endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss"),
+            visionResult = result,
+            robotId = taskIn.robotId,
+            taskId = taskIn.taskId
+        };
         _logger.LogInformation($"结束视觉盘点任务，任务ID{_taskInventoryBack.taskId}");
         await PostDataToApi(_taskInventoryBack);
     }
 
-    private async void InitFrontTaskVisionBack(List<string> strings)
+    private async void InitFrontTaskVisionBack(List<string> strings,TaskIn taskIn)
     {
-        _frontShutterTaskBack.scanInfo = strings;
+        _frontShutterTaskBack = new FrontShutterTaskBack()
+        {
+            robotId = taskIn.robotId,
+            taskId = taskIn.taskId,
+            scanInfo = strings,
+            trayCode = taskIn.trayCode
+        };
         _logger.LogInformation($"结束视觉扫描任务，任务ID{_frontShutterTaskBack.taskId}");
         await PostDataToApi(_frontShutterTaskBack);
     }
 
-    private async void InitBehindTaskVisionBack(bool result)
+    private async void InitBehindTaskVisionBack(bool result,TaskIn taskIn)
     {
-        _behindShutterTaskBack.photoSignal = result;
+        _behindShutterTaskBack = new BehindShutterTaskBack()
+        {
+            robotId = taskIn.robotId,
+            taskId = taskIn.taskId,
+            photoSignal = result
+        };
         _logger.LogInformation($"结束视觉拍照任务，任务ID{_behindShutterTaskBack.taskId}");
         await PostDataToApi(_behindShutterTaskBack);
     }
