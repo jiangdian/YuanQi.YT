@@ -2,6 +2,9 @@
 using Newtonsoft.Json;
 using RobotClientAPI.Common;
 using System.Text;
+using HalconDotNet;
+using RobotClientAPI.Vision;
+using System.IO.Ports;
 
 [ApiController]
 [Route("[controller]/[action]")]
@@ -33,20 +36,71 @@ public class InventoryController : ControllerBase
                         RfidClass.Instance.ReadRfid();
                         break;
                     case TaskType.vision://视觉盘点
+                        ComClass com = ComClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         _logger.LogInformation("接收到视觉盘点任务");
                         InitTaskInventoryBack(taskIn);
-                        //todo:视觉盘点
-                        InitTaskInventoryVisionBack(new List<Vision>(),taskIn);//盘点结果填入
+                        com.StartRead(out string trayCodeLeft, out string trayCodeRight);
+                        VisionClass.Instance.GrabImageVision(_configuration["deviceLeft"], _configuration["deviceRight"], trayCodeLeft, trayCodeRight, 
+                            out HObject? ho_VisionImageLeft, out HObject? ho_VisionImageRight, out string? imageLeftUrl,out string? imageRightUrl);
+                        if (ho_VisionImageLeft != null && ho_VisionImageRight != null)
+                        {
+                            List<Vision> visionResultList = new List<Vision>();
+                            VisionClass.Instance.GetStorageInformation(ho_VisionImageLeft, ho_VisionImageRight, trayCodeLeft, trayCodeRight,
+                                out List<string> materialNoListLeft, out List<string> materialNoListRight, out bool compareResultLeft, out bool compareResultRight);
+                            Vision leftResult = new Vision()
+                            {
+                                storageArea = taskIn.leftStorageCode,
+                                materialNoList = materialNoListLeft,
+                                compareResult = compareResultLeft,
+                                imgUrl = imageLeftUrl
+                            };
+                            visionResultList.Add(leftResult);
+
+                            Vision rightResult = new Vision()
+                            {
+                                storageArea = taskIn.rightStorageCode,
+                                materialNoList = materialNoListRight,
+                                compareResult = compareResultRight,
+                                imgUrl = imageRightUrl
+                            };
+                            visionResultList.Add(rightResult);
+                            //todo:视觉盘点
+                            InitTaskInventoryVisionBack(visionResultList, taskIn);//盘点结果填入
+                        }
+                        com.EndRead();
                         break;
                     case TaskType.scan://视觉盘
                         _logger.LogInformation("接收到视觉扫码任务");
-                        InitFrontTaskVisionBack(new List<string>(),taskIn);
+                        string receive1 = VisionClass.Instance.GetCodeNode("169.254.15.1", 2001);
+                        _logger.LogInformation($"读码器1结果{receive1}");
+                        Thread.Sleep(1500);
+                        string receive2 = VisionClass.Instance.GetCodeNode("169.254.90.1", 2001);
+                        _logger.LogInformation($"读码器2结果{receive2}");
+                        List<string> visionResult = new List<string>();
+                        List<string> tempList1 = new List<string>();
+                        List<string> tempList2 = new List<string>();
+                        if ((receive1 != null && receive1 != "" && receive1 != "NoRead") || (receive2 != null && receive2 != "" && receive2 != "NoRead"))
+                        {
+                            if (receive1 != null && receive1 != "" && receive1 != "NoRead")
+                                tempList1 = receive1.Split(";").ToList();
+                            if (receive2 != null && receive2 != "" && receive2 != "NoRead")
+                                tempList2 = receive2.Split(";").ToList();
+                            visionResult = tempList1.Concat(tempList2).ToList();
+                            visionResult = visionResult.Distinct().ToList();
+                        }
+                        string log = string.Join(";", visionResult);
+                        _logger.LogInformation($"最终结果为{log}");
+                        InitFrontTaskVisionBack(visionResult, taskIn);
                         break;
                     case TaskType.record:
+                        Thread.Sleep(1500);
                         _logger.LogInformation("接收到视觉拍照任务");
-                        VisionClass.Instance.GrabImage();
-                        //todo:调用视觉拍照反馈
-                        InitBehindTaskVisionBack(true,taskIn);
+                        VisionClass.Instance.GrabImageRecord(_configuration["deviceFront"], _configuration["deviceBehind"], taskIn.trayCode, out HObject? ho_Image1, out HObject? ho_Image2);
+                        if (ho_Image1 != null && ho_Image2 != null)
+                            //todo:调用视觉拍照反馈
+                            InitBehindTaskVisionBack(true, taskIn);
+                        else
+                            InitBehindTaskVisionBack(false, taskIn);
                         break;
                     case TaskType.stop:
                         RfidClass.Instance.RfidOpen();
@@ -90,7 +144,7 @@ public class InventoryController : ControllerBase
     {
         _taskInventoryBack.endTime = DateTime.Now.ToString("yyyy-MMdd HH:mm:ss");
         _taskInventoryBack.rfidResult = strings;
-        _logger.LogInformation($"结束rfid盘点任务，任务ID{_taskInventoryBack.taskId},条码信息:{string.Join(",",strings)}");
+        _logger.LogInformation($"结束rfid盘点任务，任务ID{_taskInventoryBack.taskId},条码信息:{string.Join(",", strings)}");
         await PostDataToApi(_taskInventoryBack);
     }
 
@@ -107,7 +161,7 @@ public class InventoryController : ControllerBase
         await PostDataToApi(_taskInventoryBack);
     }
 
-    private async void InitFrontTaskVisionBack(List<string> strings,TaskIn taskIn)
+    private async void InitFrontTaskVisionBack(List<string> strings, TaskIn taskIn)
     {
         _frontShutterTaskBack = new FrontShutterTaskBack()
         {
@@ -120,7 +174,7 @@ public class InventoryController : ControllerBase
         await PostDataToApi(_frontShutterTaskBack);
     }
 
-    private async void InitBehindTaskVisionBack(bool result,TaskIn taskIn)
+    private async void InitBehindTaskVisionBack(bool result, TaskIn taskIn)
     {
         _behindShutterTaskBack = new BehindShutterTaskBack()
         {
