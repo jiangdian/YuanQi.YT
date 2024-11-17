@@ -8,18 +8,18 @@ public class VisionClass
 
     private static readonly object lockobj = new object();//线程锁
 
-    public static VisionClass Instance => GetInstance();
-
     HTuple hv_AcqHandle1 = new HTuple();
 
     HTuple hv_AcqHandle2 = new HTuple();
 
-    public VisionClass()
-    {
+    IConfiguration configuration;
 
+    private VisionClass(IConfiguration _configuration)
+    {
+        configuration = _configuration;
     }
 
-    public static VisionClass GetInstance()
+    public static VisionClass GetInstance(IConfiguration _configuration)
     {
         if (instance == null)
         {
@@ -27,7 +27,7 @@ public class VisionClass
             {
                 if (instance == null)
                 {
-                    instance = new VisionClass();
+                    instance = new VisionClass(_configuration);
                 }
             }
         }
@@ -156,20 +156,24 @@ public class VisionClass
         compareResultLeft = false; compareResultRight = false;
         if (trayCodeLeft != null)
         {
-            compareResultLeft = CompareStorage(trayCodeLeft, "front", "left", ho_ImageLeft, compareResultLeft);
+            compareResultLeft = CompareStorage(trayCodeLeft, "front", "left", ho_ImageLeft, compareResultLeft, Convert.ToDouble(configuration["visionLeftRow1"]), 
+                Convert.ToDouble(configuration["visionLeftColumn1"]), Convert.ToDouble(configuration["visionLeftRow2"]), Convert.ToDouble(configuration["visionLeftColumn2"]));
             materialNoListLeft = FindBarCode(ho_ImageLeft, materialNoListLeft);
             materialNoListLeft = FindData2dCode(ho_ImageLeft, materialNoListLeft);
+            materialNoListLeft = materialNoListLeft.Distinct().ToList();
         }
 
         if (trayCodeRight != null)
         {
-            compareResultRight = CompareStorage(trayCodeRight, "behind", "right", ho_ImageRight, compareResultRight);
+            compareResultRight = CompareStorage(trayCodeRight, "behind", "right", ho_ImageRight, compareResultRight, Convert.ToDouble(configuration["visionRightRow1"]), 
+                Convert.ToDouble(configuration["visionRightColumn1"]), Convert.ToDouble(configuration["visionRightRow2"]), Convert.ToDouble(configuration["visionRightColumn2"]));
             materialNoListRight = FindBarCode(ho_ImageRight, materialNoListRight);
             materialNoListRight = FindData2dCode(ho_ImageRight, materialNoListRight);
+            materialNoListRight = materialNoListRight.Distinct().ToList();
         }
     }
 
-    private bool CompareStorage(string trayCode, string recordLocation, string storageLocation, HObject ho_RealStorageImage, bool compareResult)
+    private bool CompareStorage(string trayCode, string recordLocation, string storageLocation, HObject ho_RealStorageImage, bool compareResult, double row1, double column1, double row2, double column2)
     {
         string imageUrl = "";
         foreach (string file in Directory.GetFiles(@"\\192.168.10.150\picture\record"))
@@ -195,11 +199,17 @@ public class VisionClass
     private void VisionCompare(HObject ho_InitImage, HObject ho_RealImage, out double height, out double area)
     {
         HOperatorSet.AbsDiffImage(ho_InitImage, ho_RealImage, out HObject ho_ImageAbsDiff, 1);
-        HOperatorSet.CropRectangle1(ho_ImageAbsDiff, out HObject ho_ImagePart, 0, 0, 0, 0);
-        HOperatorSet.Rgb1ToGray(ho_ImagePart, out HObject ho_GrayImage);
-        HOperatorSet.Threshold(ho_GrayImage, out HObject ho_Region, 15, 255);
-        HOperatorSet.SmallestRectangle1(ho_Region, out _, out HTuple hv_Column1, out _, out HTuple hv_Column2);
-        HOperatorSet.AreaCenter(ho_Region, out HTuple hv_Area, out _, out _);
+        HOperatorSet.Rgb1ToGray(ho_ImageAbsDiff, out HObject ho_GrayImage);
+        HOperatorSet.Threshold(ho_GrayImage, out HObject ho_Region, 10, 200);
+        HOperatorSet.ErosionRectangle1(ho_Region, out HObject ho_RegionErosion, 1, 21);
+        HOperatorSet.DilationRectangle1(ho_RegionErosion, out HObject ho_RegionDilation, 25, 25);
+        HOperatorSet.Connection(ho_RegionDilation, out HObject ho_ConnectedRegions);
+        HOperatorSet.SelectShape(ho_ConnectedRegions, out HObject ho_SelectedRegions, "area", "and", 99999, 9999999);
+        HOperatorSet.AreaCenter(ho_SelectedRegions, out HTuple hv_Area, out _, out _);
+        HOperatorSet.TupleSortIndex(hv_Area, out HTuple hv_Indices);
+        HOperatorSet.CountObj(ho_SelectedRegions, out HTuple hv_Number);
+        HOperatorSet.SelectObj(ho_SelectedRegions, out HObject ho_ObjectSelected, hv_Indices[hv_Number.I - 1] + 1);
+        HOperatorSet.SmallestRectangle1(ho_ObjectSelected, out _, out HTuple hv_Column1, out _, out HTuple hv_Column2);
         height = Math.Abs(hv_Column2.D - hv_Column1.D);
         area = hv_Area.D;
     }
