@@ -16,4 +16,6 @@
     /// 图片地址
     /// </summary>
     public string imgUrl { get; set; }
+
+    public string trayNo { get; set; }
 }
