@@ -81,6 +81,7 @@ public class VisionClass
             HOperatorSet.SetFramegrabberParam(hv_AcqHandle1, "ExposureTime", 100000.0);
             HOperatorSet.OpenFramegrabber("GigEVision2", 0, 0, 0, 0, 0, 0, "progressive",
             -1, "default", -1, "false", "default", device2, 0, -1, out hv_AcqHandle2);
+            HOperatorSet.SetFramegrabberParam(hv_AcqHandle2, "ExposureTime", 100000.0);
 
             HOperatorSet.GrabImage(out ho_Image1, hv_AcqHandle1);
             HOperatorSet.GrabImage(out ho_Image2, hv_AcqHandle2);
