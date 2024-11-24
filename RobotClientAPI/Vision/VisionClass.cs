@@ -81,7 +81,6 @@ public class VisionClass
             HOperatorSet.SetFramegrabberParam(hv_AcqHandle1, "ExposureTime", 100000.0);
             HOperatorSet.OpenFramegrabber("GigEVision2", 0, 0, 0, 0, 0, 0, "progressive",
             -1, "default", -1, "false", "default", device2, 0, -1, out hv_AcqHandle2);
-            HOperatorSet.SetFramegrabberParam(hv_AcqHandle2, "ExposureTime", 100000.0);
 
             HOperatorSet.GrabImage(out ho_Image1, hv_AcqHandle1);
             HOperatorSet.GrabImage(out ho_Image2, hv_AcqHandle2);
@@ -259,38 +258,24 @@ public class VisionClass
 
     private List<string> FindBarCode(HObject ho_Image, List<string> materialNoList)
     {
-        try
+        HOperatorSet.CreateBarCodeModel("", "", out HTuple hv_BarCodeHandle);
+        HOperatorSet.FindBarCode(ho_Image, out _, hv_BarCodeHandle, "auto", out HTuple hv_DecodedDataStrings);
+        if (hv_DecodedDataStrings != null)
         {
-            HOperatorSet.CreateBarCodeModel(new HTuple(), new HTuple(), out HTuple hv_BarCodeHandle);
-            HOperatorSet.FindBarCode(ho_Image, out _, hv_BarCodeHandle, "auto", out HTuple hv_DecodedDataStrings);
-            if (hv_DecodedDataStrings != null)
-            {
-                for (int i = 0; i < hv_DecodedDataStrings.Length; i++)
-                    materialNoList.Add(hv_DecodedDataStrings[i].S);
-            }
-        }
-        catch(Exception ex)
-        {
-            logger.LogError(ex.Message);
+            for (int i = 0; i < hv_DecodedDataStrings.Length; i++)
+                materialNoList.Add(hv_DecodedDataStrings[i].S);
         }
         return materialNoList;
     }
 
     private List<string> FindData2dCode(HObject ho_Image, List<string> materialNoList)
     {
-        try
+        HOperatorSet.CreateDataCode2dModel("QR Code", "", "", out HTuple hv_DataCodeHandle);
+        HOperatorSet.FindDataCode2d(ho_Image, out _, hv_DataCodeHandle, "", "", out _, out HTuple hv_DecodedDataStrings);
+        if (hv_DecodedDataStrings != null)
         {
-            HOperatorSet.CreateDataCode2dModel("QR Code", new HTuple(), new HTuple(), out HTuple hv_DataCodeHandle);
-            HOperatorSet.FindDataCode2d(ho_Image, out _, hv_DataCodeHandle, new HTuple(), new HTuple(), out _, out HTuple hv_DecodedDataStrings);
-            if (hv_DecodedDataStrings != null)
-            {
-                for (int i = 0; i < hv_DecodedDataStrings.Length; i++)
-                    materialNoList.Add(hv_DecodedDataStrings[i].S);
-            }
-        }
-        catch(Exception ex)
-        {
-            logger.LogError(ex.Message);
+            for (int i = 0; i < hv_DecodedDataStrings.Length; i++)
+                materialNoList.Add(hv_DecodedDataStrings[i].S);
         }
         return materialNoList;
     }

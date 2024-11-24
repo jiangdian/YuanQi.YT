@@ -37,8 +37,6 @@ public class InventoryController : ControllerBase
                         break;
                     case TaskType.vision://视觉盘点
                         ComClass com = ComClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
-                        LightClass lightVision = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
-                        VisionClass vision = VisionClass.GetInstance(_configuration, _logger);
                         _logger.LogInformation("接收到视觉盘点任务");
                         lightVision.OpenLight();
                         InitTaskInventoryBack(taskIn);
@@ -78,8 +76,7 @@ public class InventoryController : ControllerBase
                         VisionClass scan = VisionClass.GetInstance(_configuration, _logger);
                         LightClass lightScan = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         _logger.LogInformation("接收到视觉扫码任务");
-                        lightScan.OpenLight();
-                        string receive1 = scan.GetCodeNode("169.254.15.1", 2001);
+                        string receive1 = VisionClass.Instance.GetCodeNode("169.254.15.1", 2001);
                         _logger.LogInformation($"读码器1结果{receive1}");
                         Thread.Sleep(1500);
                         string receive2 = scan.GetCodeNode("169.254.90.1", 2001);
@@ -104,11 +101,7 @@ public class InventoryController : ControllerBase
                     case TaskType.record:
                         LightClass lightRecord = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         _logger.LogInformation("接收到视觉拍照任务");
-                        lightRecord.OpenLight();
-                        VisionClass record = VisionClass.GetInstance(_configuration, _logger);
-                        _logger.LogInformation("开始拍照");
-                        record.GrabImageRecord(_configuration["deviceFront"], _configuration["deviceBehind"], taskIn.trayCode, out HObject? ho_Image1, out HObject? ho_Image2);
-                        _logger.LogInformation("拍照完成");
+                        VisionClass.Instance.GrabImageRecord(_configuration["deviceFront"], _configuration["deviceBehind"], taskIn.trayCode, out HObject? ho_Image1, out HObject? ho_Image2);
                         if (ho_Image1 != null && ho_Image2 != null)
                             //todo:调用视觉拍照反馈
                             InitBehindTaskVisionBack(true, taskIn);
