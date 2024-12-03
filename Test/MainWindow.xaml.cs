@@ -92,7 +92,7 @@ namespace Test
             {
                 try
                 {
-                    string apiUrl = "http://192.168.10.150:10010/Inventory/Inventory";
+                    string apiUrl = "http://localhost:5000/Inventory/Inventory";
                     //string apiUrl = "http://127.0.0.1:10010/Inventory/Inventory";
                     //string apiUrl = "http://127.0.0.1:10011/Inventory/Inventory";
                     var jsonString = JsonConvert.SerializeObject(taskIn);

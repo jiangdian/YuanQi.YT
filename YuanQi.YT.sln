@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RobotClientAPI", "RobotClie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "接口测试", "接口测试", "{203482AF-E73F-43F1-8106-3C9C0BC67E04}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "WebApplication2\WebApplication2.csproj", "{5BBF7B27-0CB0-4A6F-9997-E523AD2FA1D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{DF966929-83BF-4EA8-8B2F-E57EA7DC8B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF966929-83BF-4EA8-8B2F-E57EA7DC8B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF966929-83BF-4EA8-8B2F-E57EA7DC8B47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BBF7B27-0CB0-4A6F-9997-E523AD2FA1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BBF7B27-0CB0-4A6F-9997-E523AD2FA1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BBF7B27-0CB0-4A6F-9997-E523AD2FA1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BBF7B27-0CB0-4A6F-9997-E523AD2FA1D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

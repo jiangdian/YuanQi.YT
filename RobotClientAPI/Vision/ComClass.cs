@@ -73,23 +73,76 @@ namespace RobotClientAPI.Vision
         public void StartRead(out string result1, out string result2)
         {
             byte[] send = [0x16, 0x54, 0x0D];
-            WriteToPorts(send);
-            if (port1 != null && port1.IsOpen) result1 = port1.ReadLine();
-            else result1 = "";
-            if (port2 != null && port2.IsOpen) result2 = port2.ReadLine();
-            else result2 = "";
+            WriteToPorts(port1,send);
+            try
+            {
+                if (port1 != null && port1.IsOpen)
+                {
+                    Thread.Sleep(500);
+                    port1.ReadTimeout = 10000;
+                    byte[] buffer = new byte[1024]; // 根据需要调整缓冲区大小
+                    int bytesRead = port1.Read(buffer, 0, buffer.Length);
+                    if (bytesRead > 0)
+                    {
+                        // 将收到的数据转换为字符串
+                        result1 = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    }
+                    else result1 = "";
+                }
+                else result1 = "";
+            }
+            catch (Exception ex)
+            {
+                result1 = "";
+            }
+            finally
+            {
+                EndRead1();
+            }
+
+            WriteToPorts(port2, send);
+            try
+            {
+                if (port2 != null && port2.IsOpen)
+                {
+                    Thread.Sleep(500);
+                    port2.ReadTimeout = 10000;
+                    byte[] buffer = new byte[1024]; // 根据需要调整缓冲区大小
+                    int bytesRead = port2.Read(buffer, 0, buffer.Length);
+                    if (bytesRead > 0)
+                    {
+                        // 将收到的数据转换为字符串
+                        result2 = System.Text.Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                    }
+                    else result2 = "";
+                }
+                else result2 = "";
+            }
+            catch (Exception ex)
+            {
+                result2 = "";
+            }
+            finally
+            {
+                EndRead2();
+            }
         }
 
-        public void EndRead()
+        private void EndRead1()
         {
             byte[] send = [0x16, 0x55, 0x0D];
-            WriteToPorts(send);
+            if (port1 != null && port1.IsOpen) port1.Write(send, 0, send.Length);
         }
 
-        private void WriteToPorts(byte[] data)
+        private void EndRead2()
         {
-            if (port1 != null && port1.IsOpen) port1.Write(data, 0, data.Length);
-            if (port2 != null && port2.IsOpen) port2.Write(data, 0, data.Length);
+            byte[] send = [0x16, 0x55, 0x0D];
+            if (port2 != null && port2.IsOpen) port2.Write(send, 0, send.Length);
+        }
+
+        private void WriteToPorts(SerialPort port, byte[] data)
+        {
+            if (port != null && port.IsOpen) port.Write(data, 0, data.Length);
         }
     }
 }
