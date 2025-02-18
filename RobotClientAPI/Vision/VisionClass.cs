@@ -308,7 +308,7 @@ public class VisionClass
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-        }
+        } 
         return materialNoList;
     }
 

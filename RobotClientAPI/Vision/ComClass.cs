@@ -73,7 +73,7 @@ namespace RobotClientAPI.Vision
         public void StartRead(out string result1, out string result2)
         {
             byte[] send = [0x16, 0x54, 0x0D];
-            WriteToPorts(port1,send);
+            WriteToPorts(port1, send);
             try
             {
                 if (port1 != null && port1.IsOpen)

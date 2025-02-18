@@ -43,8 +43,8 @@ public class InventoryController : ControllerBase
                         lightVision.OpenLight();
                         InitTaskInventoryBack(taskIn);
                         com.StartRead(out string trayCodeLeft, out string trayCodeRight);
-                        vision.GrabImageVision(_configuration["deviceLeft"], _configuration["deviceRight"], trayCodeLeft, trayCodeRight, 
-                            out HObject? ho_VisionImageLeft, out HObject? ho_VisionImageRight, out string? imageLeftUrl,out string? imageRightUrl);
+                        vision.GrabImageVision(_configuration["deviceLeft"], _configuration["deviceRight"], trayCodeLeft, trayCodeRight,
+                            out HObject? ho_VisionImageLeft, out HObject? ho_VisionImageRight, out string? imageLeftUrl, out string? imageRightUrl);
                         if (ho_VisionImageLeft != null && ho_VisionImageRight != null)
                         {
                             List<Vision> visionResultList = new List<Vision>();
@@ -56,7 +56,7 @@ public class InventoryController : ControllerBase
                                 materialNoList = materialNoListLeft,
                                 compareResult = true,
                                 imgUrl = imageLeftUrl,
-                                trayNo= trayCodeLeft
+                                trayNo = trayCodeLeft
                             };
                             visionResultList.Add(leftResult);
 
@@ -199,6 +199,7 @@ public class InventoryController : ControllerBase
         _logger.LogInformation($"结束视觉拍照任务，任务ID{_behindShutterTaskBack.taskId}");
         await PostDataToApi(_behindShutterTaskBack);
     }
+
     /// <summary>
     /// 调用wcs任务反馈接口
     /// </summary>
@@ -257,7 +258,7 @@ public class InventoryController : ControllerBase
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex.Message);   
                 return $"Error: {ex.Message}";
             }
         }
