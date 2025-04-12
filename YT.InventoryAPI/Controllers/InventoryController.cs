@@ -7,10 +7,12 @@ using System.Text;
 public class InventoryController : ControllerBase
 {
     ILogger<InventoryController> _logger;
+
     public InventoryController(ILogger<InventoryController> logger)
     {
         _logger = logger;
     }
+
     [HttpPost]
     public TaskOut Inventory(TaskIn taskIn)
     {
@@ -43,7 +45,7 @@ public class InventoryController : ControllerBase
                     break;
                 default:
                     break;
-            }           
+            }
             taskOut.status = 200;
             taskOut.msg = "任务发送成功";
             _logger.LogInformation($"任务ID{taskIn.taskId}下发成功!");
@@ -57,12 +59,13 @@ public class InventoryController : ControllerBase
             return taskOut;
         }
     }
+
     /// <summary>
     /// 调用盘点接口
     /// </summary>
     /// <param name="taskIn"></param>
     /// <returns></returns>
-    private async Task<string> PostDataToApi(TaskIn taskIn,string sUrl)
+    private async Task<string> PostDataToApi(TaskIn taskIn, string sUrl)
     {
         using (HttpClient client = new HttpClient())
         {

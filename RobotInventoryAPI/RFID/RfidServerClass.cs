@@ -5,6 +5,7 @@ public class RfidServerClass : IHostedService
 {
     GClient gClient = new GClient();
     public HashSet<string> recevid = new HashSet<string>();
+
     public RfidServerClass()
     {
         //GServer gServer = new GServer();

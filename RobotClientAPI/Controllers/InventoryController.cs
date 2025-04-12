@@ -15,11 +15,13 @@ public class InventoryController : ControllerBase
     static FrontShutterTaskBack _frontShutterTaskBack = new FrontShutterTaskBack();
     static BehindShutterTaskBack _behindShutterTaskBack = new BehindShutterTaskBack();
     IConfiguration _configuration;
+
     public InventoryController(ILogger<InventoryController> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
     }
+
     [HttpPost]
     public TaskOut Inventory(TaskIn taskIn)
     {
@@ -137,6 +139,7 @@ public class InventoryController : ControllerBase
             return taskOut;
         }
     }
+
     /// <summary>
     /// 开始盘点时，记录任务信息
     /// </summary>
@@ -151,6 +154,7 @@ public class InventoryController : ControllerBase
         };
         _logger.LogInformation($"开始{taskIn.taskType}盘点任务，任务ID{taskIn.taskId}");
     }
+
     /// <summary>
     /// rfid盘点结束，记录盘点结果
     /// </summary>
@@ -258,7 +262,7 @@ public class InventoryController : ControllerBase
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);   
+                _logger.LogError(ex.Message);
                 return $"Error: {ex.Message}";
             }
         }

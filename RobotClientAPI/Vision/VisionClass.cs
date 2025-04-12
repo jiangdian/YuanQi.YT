@@ -132,7 +132,7 @@ public class VisionClass
         }
     }
 
-    private double AdjustExposure(HTuple hv_AcqHandle,double row1,double column1,double row2,double column2)
+    private double AdjustExposure(HTuple hv_AcqHandle, double row1, double column1, double row2, double column2)
     {
         try
         {
@@ -144,7 +144,7 @@ public class VisionClass
             int gap = Convert.ToInt32(125 - hv_Mean.D);
             return Convert.ToDouble(Convert.ToInt32(135000 + gap * 1000));
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.LogError($"调整曝光出现问题，原因：{ex.Message}");
             return 0;
@@ -308,7 +308,7 @@ public class VisionClass
         catch (Exception ex)
         {
             logger.LogError(ex.Message);
-        } 
+        }
         return materialNoList;
     }
 

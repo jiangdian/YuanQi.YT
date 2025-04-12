@@ -8,20 +8,22 @@ public class InventoryController : ControllerBase
 {
     ILogger<InventoryController> _logger;
     RfidServerClass _serverClass;
+    static TaskInventoryBack _taskInventoryBack = new TaskInventoryBack();
 
-    static TaskInventoryBack _taskInventoryBack=new TaskInventoryBack();
     public InventoryController(ILogger<InventoryController> logger, RfidServerClass serverClass)
     {
         _logger = logger;
         _serverClass = serverClass;
     }
+
     [HttpPost]
     public TaskOut Inventory(TaskIn taskIn)
     {
         TaskOut taskOut = new TaskOut();
         try
         {
-            Task.Run(() => {
+            Task.Run(() =>
+            {
                 switch (taskIn.taskType)
                 {
                     case TaskType.rfid:
@@ -34,7 +36,7 @@ public class InventoryController : ControllerBase
                         //InitTaskInventoryVisionBack(true);//盘点结果填入
                         break;
                     case TaskType.stop:
-                        
+
                         InitTaskInventoryRfidBack(_serverClass.CloseRfid());
                         break;
                     default:
@@ -54,6 +56,7 @@ public class InventoryController : ControllerBase
             return taskOut;
         }
     }
+
     /// <summary>
     /// 开始盘点时，记录任务信息
     /// </summary>
@@ -68,6 +71,7 @@ public class InventoryController : ControllerBase
         };
         _logger.LogInformation("开始{0}盘点任务，任务ID{1}", taskIn.taskType, taskIn.taskId);
     }
+
     /// <summary>
     /// rfid盘点结束，记录盘点结果
     /// </summary>
@@ -79,6 +83,7 @@ public class InventoryController : ControllerBase
         _logger.LogInformation("结束rfid盘点任务，任务ID{0}", _taskInventoryBack.taskId);
         await PostDataToApi(_taskInventoryBack);
     }
+
     /// <summary>
     /// 调用wcs任务反馈接口
     /// </summary>
@@ -110,4 +115,4 @@ public class InventoryController : ControllerBase
             }
         }
     }
- }
+}

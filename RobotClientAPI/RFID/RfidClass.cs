@@ -10,10 +10,12 @@ public class RfidClass
     private static readonly object lockobj = new object();//线程锁
     public HashSet<string> recevid = new HashSet<string>();
     private string rfidName;
+
     public RfidClass()
     {
         clientConn = new GClient();
     }
+
     public static RfidClass GetInstance()
     {
         if (instance == null)
@@ -28,6 +30,7 @@ public class RfidClass
         }
         return instance;
     }
+
     public bool RfidOpen()
     {
         if (clientConn.OpenTcp("192.168.0.30:8160", 3000, out status))
@@ -44,7 +47,6 @@ public class RfidClass
         {
             return false;
         }
-
     }
 
     private void OnTcpDisconnected(string readerName)
@@ -58,16 +60,18 @@ public class RfidClass
     {
         return clientConn.OpenTcpRetry(rfidName, 3000, out status, 3);
     }
+
     public List<string> CloseRfid()
     {
         MsgBaseStop msgBaseStop = new MsgBaseStop();
-        clientConn.SendSynMsg(msgBaseStop);
+        clientConn.SendSynMsg(msgBaseStop); 
         if (0 == msgBaseStop.RtCode)
         {
             return recevid.ToList();
         }
         else { return null; }
     }
+
     public bool ReadRfid()
     {
         MsgBaseInventoryEpc msgBaseInventoryEpc = new MsgBaseInventoryEpc();
@@ -81,6 +85,7 @@ public class RfidClass
         }
         else { return false; }
     }
+
     private static void OnEncapedTagEpcOver(EncapedLogBaseEpcOver msg)
     {
 
