@@ -20,6 +20,9 @@
     <Reference Include="halcondotnet">
       <HintPath>Lib\halcondotnet.dll</HintPath>
     </Reference>
+    <Reference Include="VisionLabrary">
+      <HintPath>..\..\..\01_VisionLabrary\VisionLabrary\VisionLabrary\bin\Debug\net6.0\VisionLabrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

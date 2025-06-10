@@ -91,6 +91,18 @@ namespace RobotClientAPI.Vision
             WriteToPort(send);
         }
 
+        public void SwitchRealTimeMode()
+        {
+            byte[] switchMode = [0xA5, 0x01, 0x0F, 0x00, 0x00, 0x01, 0xFA, 0xE7];
+            WriteToPort(switchMode);
+        }
+
+        public void SwitchWorkMode()
+        {
+            byte[] switchMode = [0xA5, 0x01, 0x0F, 0x00, 0x00, 0x00, 0x3A, 0x26];
+            WriteToPort(switchMode);
+        }
+
         private void WriteToPort(byte[] data)
         {
             if (port != null && port.IsOpen)

@@ -42,6 +42,11 @@ public class InventoryController : ControllerBase
                         LightClass lightVision = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         VisionClass vision = VisionClass.GetInstance(_configuration, _logger);
                         _logger.LogInformation("接收到视觉盘点任务");
+
+                        lightVision.SwitchRealTimeMode();
+                        Thread.Sleep(2000);
+                        lightVision.SwitchWorkMode();
+
                         lightVision.OpenLight();
                         InitTaskInventoryBack(taskIn);
                         com.StartRead(out string trayCodeLeft, out string trayCodeRight);
@@ -80,6 +85,11 @@ public class InventoryController : ControllerBase
                         VisionClass scan = VisionClass.GetInstance(_configuration, _logger);
                         LightClass lightScan = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         _logger.LogInformation("接收到视觉扫码任务");
+
+                        lightScan.SwitchRealTimeMode();
+                        Thread.Sleep(2000);
+                        lightScan.SwitchWorkMode();
+
                         lightScan.OpenLightScan();
                         string receive1 = scan.GetCodeNode("169.254.15.1", 2001);
                         _logger.LogInformation($"读码器1结果{receive1}");
@@ -106,6 +116,11 @@ public class InventoryController : ControllerBase
                     case TaskType.record:
                         LightClass lightRecord = LightClass.GetInstance(_configuration, Parity.None, StopBits.One, Handshake.None);
                         _logger.LogInformation("接收到视觉拍照任务");
+
+                        lightRecord.SwitchRealTimeMode();
+                        Thread.Sleep(2000);
+                        lightRecord.SwitchWorkMode();
+
                         lightRecord.OpenLightRecord();
                         VisionClass record = VisionClass.GetInstance(_configuration, _logger);
                         _logger.LogInformation("开始拍照");
